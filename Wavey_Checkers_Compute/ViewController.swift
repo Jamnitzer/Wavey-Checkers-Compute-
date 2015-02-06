@@ -1,5 +1,14 @@
 //------------------------------------------------------------------------------------------
-// Copyright (c) 2014 Nordic Software, Inc.  All rights reserved.
+//  ViewController.m
+//  Metal Example
+//
+//  Created by Stefan Johnson on 4/06/2014.
+//  Copyright (c) 2014 Stefan Johnson. All rights reserved.
+//
+//------------------------------------------------------------------------------------------
+// ScrimpyCat/Metal-Examples
+//------------------------------------------------------------------------------------------
+// converted to Swift by Jim Wrenholt.
 //------------------------------------------------------------------------------------------
 import UIKit
 import Metal
@@ -355,40 +364,3 @@ class ViewController: UIViewController
     //--------------------------------------------------------------------
 }
 //--------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------
-
-
-
-//-----------------------------------------------------------
-//        let src_dataB = BufferData(
-//            rect: [
-//                VertexData( position: V2f(x:Float(-1.0), y:Float(-1.0)),
-//                    texCoord: V2f(x:Float( 0.0), y:Float( 0.0))),
-//                VertexData( position: V2f(x:Float(+1.0), y:Float(-1.0)),
-//                    texCoord: V2f(x:Float(+1.0), y:Float( 0.0))),
-//                VertexData( position: V2f(x:Float(-1.0), y:Float(+1.0)),
-//                    texCoord: V2f(x:Float( 0.0), y:Float(+1.0))),
-//                VertexData( position: V2f(x:Float(+1.0), y:Float(+1.0)),
-//                    texCoord: V2f(x:Float(+1.0), y:Float(+1.0)))],
-//            rectScale: V2f(x: Scale / Float(Size.width),
-//                y: Scale / Float(Size.height)),
-//            time: [Float(0.0), Float(0.0), Float(0.0)]
-//        )
-//-----------------------------------------------------------
-//------------------------------------------------------------------------------------------
-//struct BufferData
-//{
-//        var rect = [VertexData](count:4, repeatedValue:VertexData(
-//                                        position: V2f(x:Float(0.0), y:Float(0.0)) ,
-//                                        texCoord: V2f(x:Float(0.0), y:Float(0.0)) ))
-//    let rectScale:V2f
-//    let time:[Float] = [Float](count:3, repeatedValue:0.0)
-//}
-//------------------------------------------------------------------------------------------
-
-//            ColourPipelineDescriptor.vertexFunction =
-//                    defaultLibrary!.newFunctionWithName("ColourVertex")
-//
-//            ColourPipelineDescriptor.fragmentFunction =
-//                    defaultLibrary!.newFunctionWithName("ColourFragment")
-

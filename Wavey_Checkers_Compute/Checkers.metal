@@ -1,11 +1,10 @@
-//
-//  Colour.metal
-//  Metal Example
+//--------------------------------------------------------------------------------
+//  Checkers.metal
+//  Metal Compute Example
 //
 //  Created by Stefan Johnson on 4/06/2014.
 //  Copyright (c) 2014 Stefan Johnson. All rights reserved.
-//
-
+//--------------------------------------------------------------------------------
 #include <metal_stdlib>
 
 using namespace metal;
@@ -33,17 +32,8 @@ kernel void CheckerKernel(texture2d<half, access::write> Tex [[texture(0)]],
        const half3 check1 = pos.x + pos.y;
        const half3 check2 = pos.z + pos.w;
 
-//    if (LoopX > 0)
-//        {
         Tex.write(half4(check1, 1.0), i.xy);
         Tex.write(half4(check2, 1.0), i.zw);
-//        }
-//    else
-//        {
-//        Tex.write(half4(1.0, 0.0, 0.0, 1.0), i.xy);
-//        Tex.write(half4(0.0, 0.0, 1.0, 1.0), i.zw);
-//        }
-
     }
 }
 //--------------------------------------------------------------------------------

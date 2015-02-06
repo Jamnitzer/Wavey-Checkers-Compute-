@@ -1,11 +1,10 @@
-//
+//--------------------------------------------------------------------------------
 //  Colour.metal
 //  Metal Example
 //
 //  Created by Stefan Johnson on 4/06/2014.
 //  Copyright (c) 2014 Stefan Johnson. All rights reserved.
-//
-
+//--------------------------------------------------------------------------------
 #include <metal_stdlib>
 
 using namespace metal;
