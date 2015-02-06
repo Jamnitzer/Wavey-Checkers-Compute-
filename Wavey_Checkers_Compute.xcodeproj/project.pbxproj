@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D3785F71A831FAF00304708 /* Checkers.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8D3785F51A831FAF00304708 /* Checkers.metal */; };
+		8D3785F81A831FAF00304708 /* Colour.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8D3785F61A831FAF00304708 /* Colour.metal */; };
 		8D61DB0E1A7AFCCF003D3B4E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D61DB0D1A7AFCCF003D3B4E /* AppDelegate.swift */; };
 		8D61DB101A7AFCCF003D3B4E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D61DB0F1A7AFCCF003D3B4E /* ViewController.swift */; };
 		8D61DB131A7AFCCF003D3B4E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D61DB111A7AFCCF003D3B4E /* Main.storyboard */; };
@@ -26,6 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D3785F51A831FAF00304708 /* Checkers.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Checkers.metal; sourceTree = "<group>"; };
+		8D3785F61A831FAF00304708 /* Colour.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Colour.metal; sourceTree = "<group>"; };
 		8D61DB081A7AFCCF003D3B4E /* Wavey_Checkers_Compute.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wavey_Checkers_Compute.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D61DB0C1A7AFCCF003D3B4E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D61DB0D1A7AFCCF003D3B4E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -77,11 +81,9 @@
 		8D61DB0A1A7AFCCF003D3B4E /* Wavey_Checkers_Compute */ = {
 			isa = PBXGroup;
 			children = (
-				8D61DB0D1A7AFCCF003D3B4E /* AppDelegate.swift */,
+				8D3785F51A831FAF00304708 /* Checkers.metal */,
+				8D3785F61A831FAF00304708 /* Colour.metal */,
 				8D61DB0F1A7AFCCF003D3B4E /* ViewController.swift */,
-				8D61DB111A7AFCCF003D3B4E /* Main.storyboard */,
-				8D61DB141A7AFCCF003D3B4E /* Images.xcassets */,
-				8D61DB161A7AFCD0003D3B4E /* LaunchScreen.xib */,
 				8D61DB0B1A7AFCCF003D3B4E /* Supporting Files */,
 			);
 			path = Wavey_Checkers_Compute;
@@ -90,6 +92,10 @@
 		8D61DB0B1A7AFCCF003D3B4E /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8D61DB0D1A7AFCCF003D3B4E /* AppDelegate.swift */,
+				8D61DB111A7AFCCF003D3B4E /* Main.storyboard */,
+				8D61DB141A7AFCCF003D3B4E /* Images.xcassets */,
+				8D61DB161A7AFCD0003D3B4E /* LaunchScreen.xib */,
 				8D61DB0C1A7AFCCF003D3B4E /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -213,6 +219,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D61DB101A7AFCCF003D3B4E /* ViewController.swift in Sources */,
+				8D3785F81A831FAF00304708 /* Colour.metal in Sources */,
+				8D3785F71A831FAF00304708 /* Checkers.metal in Sources */,
 				8D61DB0E1A7AFCCF003D3B4E /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,6 +415,7 @@
 				8D61DB291A7AFCD0003D3B4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		8D61DB2A1A7AFCD0003D3B4E /* Build configuration list for PBXNativeTarget "Wavey_Checkers_ComputeTests" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +424,7 @@
 				8D61DB2C1A7AFCD0003D3B4E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
