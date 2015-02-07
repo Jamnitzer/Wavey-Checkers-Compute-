@@ -7,4 +7,4 @@ It is a simple example of using a compute shader in Metal.
 
  6. [Wavey Checkers Compute Example](Wavey Checkers Compute Example)
  
- 
+ ![](https://raw.githubusercontent.com/Jamnitzer/Wavey_Checkers_Compute/master/screen.png)

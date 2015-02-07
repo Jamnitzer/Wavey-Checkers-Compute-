@@ -311,7 +311,6 @@ class ViewController: UIViewController
         RenderCommand!.drawPrimitives( MTLPrimitiveType.TriangleStrip,
                                         vertexStart:0,
                                         vertexCount:4 )
-
         RenderCommand!.popDebugGroup()
         RenderCommand!.endEncoding()
 

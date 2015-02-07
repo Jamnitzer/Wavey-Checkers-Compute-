@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>445BDAC7-73E9-4C34-A389-5C59372B9101</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Wavey_Checkers_Compute</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>CE38EA3AFC7497734DB620965FA4903CEBD0D574</key>
+		<string>https://github.com/Jamnitzer/Wavey-Checkers-Compute-.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Wavey_Checkers_Compute.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>CE38EA3AFC7497734DB620965FA4903CEBD0D574</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/Jamnitzer/Wavey-Checkers-Compute-.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>CE38EA3AFC7497734DB620965FA4903CEBD0D574</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>CE38EA3AFC7497734DB620965FA4903CEBD0D574</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Wavey_Checkers_Compute</string>
+		</dict>
+	</array>
+</dict>
+</plist>
