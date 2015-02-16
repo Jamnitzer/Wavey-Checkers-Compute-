@@ -22,7 +22,7 @@ struct V2f
     let y:Float
 }
 //------------------------------------------------------------------------------------------
-struct VertexData
+struct PointData
 {
     let position:V2f
     let texCoord:V2f
@@ -30,12 +30,14 @@ struct VertexData
 //------------------------------------------------------------------------------------------
 struct BufferDataB
 {
-    var rect:VertexData
-    var rectB:VertexData
-    var rectC:VertexData
-    var rectD:VertexData
+    var pointA:PointData
+    var pointB:PointData
+    var pointC:PointData
+    var pointD:PointData
+
     let rectScale:V2f
-    let time:Float
+
+    let timeA:Float
     let timeB:Float
     let timeC:Float
 }
@@ -56,7 +58,7 @@ class ViewController: UIViewController
     var previousTime:CFTimeInterval = 0
     var time:Float = 0.0
     var resourceSemaphore:dispatch_semaphore_t = 0
-    var resourceIndex:UInt = 0
+    var renderFrameCycle:UInt = 0
 
     var defaultLibrary:MTLLibrary? = nil
     var drawable:CAMetalDrawable? = nil
@@ -75,7 +77,7 @@ class ViewController: UIViewController
         //-----------------------------------------------------------
         let PositionDescriptor = MTLVertexAttributeDescriptor()
             PositionDescriptor.format = MTLVertexFormat.Float2
-            PositionDescriptor.offset = 0      // offsetof(VertexData, position)
+            PositionDescriptor.offset = 0      // offsetof(PointData, position)
             PositionDescriptor.bufferIndex = 0
 
         //-----------------------------------------------------------
@@ -83,20 +85,20 @@ class ViewController: UIViewController
         //-----------------------------------------------------------
         let TexCoordDescriptor = MTLVertexAttributeDescriptor()
         TexCoordDescriptor.format = MTLVertexFormat.Float2
-        TexCoordDescriptor.offset = sizeof(V2f)  // offsetof(VertexData, texCoord)
+        TexCoordDescriptor.offset = sizeof(V2f)  // offsetof(PointData, texCoord)
         TexCoordDescriptor.bufferIndex = 0
         //
         //-----------------------------------------------------------
         // Layout descriptor for Vertex Data.
         //-----------------------------------------------------------
         let LayoutDescriptor = MTLVertexBufferLayoutDescriptor()
-        LayoutDescriptor.stride = sizeof(VertexData)
+        LayoutDescriptor.stride = sizeof(PointData)
         LayoutDescriptor.stepFunction = MTLVertexStepFunction.PerVertex
         LayoutDescriptor.stepRate = 1
         //
 
         //-----------------------------------------------------------
-        // vertex descriptor for Rect.
+        // vertex descriptor for rect.
         //-----------------------------------------------------------
         let RectDescriptor = MTLVertexDescriptor()
         RectDescriptor.attributes[0] = PositionDescriptor
@@ -118,23 +120,33 @@ class ViewController: UIViewController
             ColourPipelineDescriptor.fragmentFunction = fragmentProgram
             ColourPipelineDescriptor.vertexDescriptor = RectDescriptor
 
+		var pipeline_err:NSError?
         self.colourPipeline = device!.newRenderPipelineStateWithDescriptor(
-            ColourPipelineDescriptor, error: nil)
+            ColourPipelineDescriptor, error: &pipeline_err)
 
         if (colourPipeline == nil)
         {
             println("colourPipeline")
         }
+        if (pipeline_err != nil)
+        {
+            println("pipeline_err = \(pipeline_err)")
+        }
         //-----------------------------------------------------------
         // compute pipeline state.
         //-----------------------------------------------------------
+        var pipeline_error:NSError?
         let computeFunction = defaultLibrary!.newFunctionWithName("CheckerKernel")
         self.checkerPipeline = device!.newComputePipelineStateWithFunction(
-              computeFunction!, error:nil)
+              computeFunction!, error:&pipeline_error)
 
         if (checkerPipeline == nil)
         {
             println("checkerPipeline")
+        }
+        if (pipeline_error != nil)
+        {
+            println("pipeline_error = \(pipeline_error)")
         }
         //-----------------------------------------------------------
         // fill in BufferData.
@@ -144,17 +156,19 @@ class ViewController: UIViewController
 
         //-----------------------------------------------------------
         var src_data = BufferDataB(
-            rect: VertexData( position: V2f(x:Float(-1.0), y:Float(-1.0)),
+            pointA: PointData( position: V2f(x:Float(-1.0), y:Float(-1.0)),
                     texCoord: V2f(x:Float( 0.0), y:Float( 0.0))),
-            rectB:VertexData( position: V2f(x:Float(+1.0), y:Float(-1.0)),
+            pointB:PointData( position: V2f(x:Float(+1.0), y:Float(-1.0)),
                     texCoord: V2f(x:Float(+1.0), y:Float( 0.0))),
-            rectC:VertexData( position: V2f(x:Float(-1.0), y:Float(+1.0)),
+            pointC:PointData( position: V2f(x:Float(-1.0), y:Float(+1.0)),
                     texCoord: V2f(x:Float( 0.0), y:Float(+1.0))),
-            rectD:VertexData( position: V2f(x:Float(+1.0), y:Float(+1.0)),
+            pointD:PointData( position: V2f(x:Float(+1.0), y:Float(+1.0)),
                     texCoord: V2f(x:Float(+1.0), y:Float(+1.0))),
+
             rectScale: V2f(x: Scale / Float(Size.width),
                            y: Scale / Float(Size.height)),
-            time: Float(0.0),
+
+            timeA: Float(0.0),
             timeB: Float(0.0),
             timeC: Float(0.0)
         )
@@ -164,7 +178,7 @@ class ViewController: UIViewController
         self.data = device.newBufferWithLength(sizeof(BufferDataB),
                     options:MTLResourceOptions.OptionCPUCacheModeDefault)
 
-        println("sizeof(VertexData) = \(sizeof(VertexData))")
+        println("sizeof(PointData) = \(sizeof(PointData))")
         println("sizeof(BufferDataB) = \(sizeof(BufferDataB))")
 
         let bufferPointer = data?.contents()
@@ -246,7 +260,7 @@ class ViewController: UIViewController
         computeEncoder.setComputePipelineState(checkerPipeline)
 
        // SET BUFFERDATA
-        let scaleOffset = 4 * sizeof(VertexData)
+        let scaleOffset = 4 * sizeof(PointData)
         computeEncoder.setBuffer(data, offset: scaleOffset, atIndex: 0) //offsetof(BufferData, rectScale)
 
         // SET TEXTURE
@@ -266,8 +280,9 @@ class ViewController: UIViewController
     func render()
     {
         dispatch_semaphore_wait(resourceSemaphore, DISPATCH_TIME_FOREVER)
-
-        self.resourceIndex = UInt(resourceIndex + 1) % UInt(RESOURCE_COUNT)
+        //--------------------------------------------------------
+        //--------------------------------------------------------
+        self.renderFrameCycle = UInt(renderFrameCycle + 1) % UInt(RESOURCE_COUNT)
 
         let Current:CFTimeInterval = CACurrentMediaTime()
         let DeltaTime:CFTimeInterval = Current - previousTime
@@ -275,11 +290,19 @@ class ViewController: UIViewController
 
         time += Float(0.2) * Float(DeltaTime)
 
-        let timeOffset = sizeof(VertexData) * 4 + sizeof(V2f)
-            + sizeof(Float) * Int(resourceIndex)
+        //--------------------------------------------------------
+        // renderFrameCycle
+        //--------------------------------------------------------
+        let timeOffset = sizeof(PointData) * 4 + sizeof(V2f)
+            + sizeof(Float) * Int(renderFrameCycle)
 
+        //--------------------------------------------------------
+        // this updates time [0, 1, or 2] for the shader.
+        //--------------------------------------------------------
         let bufferPointer = data?.contents()
         memcpy(bufferPointer! + timeOffset, &time, UInt(sizeof(Float)))
+
+
 
         let commandBuffer = commandQueue.commandBuffer()
             commandBuffer.label = "RenderFrameCommandBuffer"
@@ -304,7 +327,7 @@ class ViewController: UIViewController
 
         RenderCommand!.setFragmentTexture(checkerTexture!, atIndex:0)
         RenderCommand!.setFragmentBuffer(data!,
-                                        offset:timeOffset,   // offsetof(BufferData, time[resourceIndex])
+                                        offset:timeOffset,   // offsetof(BufferData, time[renderFrameCycle])
                                         atIndex:0 )
 
         //--------------------------------------------------------------------
