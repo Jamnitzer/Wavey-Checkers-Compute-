@@ -182,7 +182,7 @@ class ViewController: UIViewController
         println("sizeof(BufferDataB) = \(sizeof(BufferDataB))")
 
         let bufferPointer = data?.contents()
-        memcpy(bufferPointer!, &src_data, UInt(sizeof(BufferDataB)))
+        memcpy(bufferPointer!, &src_data, Int(sizeof(BufferDataB)))
 
         //-----------------------------------------------------------
         // new texture checkerTexture.
@@ -300,9 +300,7 @@ class ViewController: UIViewController
         // this updates time [0, 1, or 2] for the shader.
         //--------------------------------------------------------
         let bufferPointer = data?.contents()
-        memcpy(bufferPointer! + timeOffset, &time, UInt(sizeof(Float)))
-
-
+        memcpy(bufferPointer! + timeOffset, &time, Int(sizeof(Float)))
 
         let commandBuffer = commandQueue.commandBuffer()
             commandBuffer.label = "RenderFrameCommandBuffer"
