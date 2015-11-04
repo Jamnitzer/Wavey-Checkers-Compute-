@@ -57,7 +57,7 @@ class ViewController: UIViewController
 
     var previousTime:CFTimeInterval = 0
     var time:Float = 0.0
-    var resourceSemaphore:dispatch_semaphore_t = 0
+    var resourceSemaphore:dispatch_semaphore_t! = nil
     var renderFrameCycle:UInt = 0
 
     var defaultLibrary:MTLLibrary? = nil
@@ -69,8 +69,8 @@ class ViewController: UIViewController
         super.viewDidLoad()
 
         let device = MTLCreateSystemDefaultDevice()
-        commandQueue = device.newCommandQueue()
-        defaultLibrary = device.newDefaultLibrary()
+        commandQueue = device!.newCommandQueue()
+        defaultLibrary = device!.newDefaultLibrary()
 
         //-----------------------------------------------------------
         // vertex attribute for position
@@ -116,38 +116,31 @@ class ViewController: UIViewController
             ColourPipelineDescriptor.colorAttachments[0].pixelFormat =
                     MTLPixelFormat.BGRA8Unorm
 
-            ColourPipelineDescriptor.vertexFunction = vertexProgram
+            ColourPipelineDescriptor.vertexFunction = vertexProgram!
             ColourPipelineDescriptor.fragmentFunction = fragmentProgram
             ColourPipelineDescriptor.vertexDescriptor = RectDescriptor
 
-		var pipeline_err:NSError?
-        self.colourPipeline = device!.newRenderPipelineStateWithDescriptor(
-            ColourPipelineDescriptor, error: &pipeline_err)
-
-        if (colourPipeline == nil)
-        {
-            println("colourPipeline")
+        do {
+            self.colourPipeline = try device!.newRenderPipelineStateWithDescriptor(
+                ColourPipelineDescriptor)
         }
-        if (pipeline_err != nil)
-        {
-            println("pipeline_err = \(pipeline_err)")
+        catch let pipeline_err as NSError
+            {
+                print("pipeline_err = \(pipeline_err)")
         }
         //-----------------------------------------------------------
         // compute pipeline state.
         //-----------------------------------------------------------
-        var pipeline_error:NSError?
-        let computeFunction = defaultLibrary!.newFunctionWithName("CheckerKernel")
-        self.checkerPipeline = device!.newComputePipelineStateWithFunction(
-              computeFunction!, error:&pipeline_error)
+        let computeFunction =  defaultLibrary!.newFunctionWithName("CheckerKernel")
+        do {
+            self.checkerPipeline = try device!.newComputePipelineStateWithFunction(
+                computeFunction!)
+        }
+        catch let pipeline_err as NSError
+        {
+            print("pipeline_err = \(pipeline_err)")
+        }
 
-        if (checkerPipeline == nil)
-        {
-            println("checkerPipeline")
-        }
-        if (pipeline_error != nil)
-        {
-            println("pipeline_error = \(pipeline_error)")
-        }
         //-----------------------------------------------------------
         // fill in BufferData.
         //-----------------------------------------------------------
@@ -175,11 +168,11 @@ class ViewController: UIViewController
         //-----------------------------------------------------------
         // new buffer with BufferData.
         //-----------------------------------------------------------
-        self.data = device.newBufferWithLength(sizeof(BufferDataB),
+        self.data = device!.newBufferWithLength(sizeof(BufferDataB),
                     options:MTLResourceOptions.OptionCPUCacheModeDefault)
 
-        println("sizeof(PointData) = \(sizeof(PointData))")
-        println("sizeof(BufferDataB) = \(sizeof(BufferDataB))")
+        // print("sizeof(PointData) = \(sizeof(PointData))")
+        // print("sizeof(BufferDataB) = \(sizeof(BufferDataB))")
 
         let bufferPointer = data?.contents()
         memcpy(bufferPointer!, &src_data, Int(sizeof(BufferDataB)))
@@ -196,7 +189,7 @@ class ViewController: UIViewController
             height:texHeight,
             mipmapped:false)
 
-        self.checkerTexture = device.newTextureWithDescriptor(texDescriptor)
+        self.checkerTexture = device!.newTextureWithDescriptor(texDescriptor)
 
         //-----------------------------------------------------------
         // generate the checker texture.
@@ -309,31 +302,31 @@ class ViewController: UIViewController
         let RenderCommand = commandBuffer.renderCommandEncoderWithDescriptor(
                 renderPassDesc )
 
-        RenderCommand!.pushDebugGroup("Apply wave")
+        RenderCommand.pushDebugGroup("Apply wave")
 
         let aViewport = MTLViewport(originX: 0.0, originY: 0.0,
             width: Double(renderLayer.drawableSize.width),
             height: Double(renderLayer.drawableSize.height),
             znear: 0.0, zfar: 1.0)
 
-        RenderCommand!.setViewport(aViewport)
+        RenderCommand.setViewport(aViewport)
 
-        RenderCommand!.setRenderPipelineState(colourPipeline!)
-        RenderCommand!.setVertexBuffer( data!,
+        RenderCommand.setRenderPipelineState(colourPipeline!)
+        RenderCommand.setVertexBuffer( data!,
                                         offset:0,      //offsetof(BufferData, rect)
                                         atIndex:0 )
 
-        RenderCommand!.setFragmentTexture(checkerTexture!, atIndex:0)
-        RenderCommand!.setFragmentBuffer(data!,
+        RenderCommand.setFragmentTexture(checkerTexture!, atIndex:0)
+        RenderCommand.setFragmentBuffer(data!,
                                         offset:timeOffset,   // offsetof(BufferData, time[renderFrameCycle])
                                         atIndex:0 )
 
         //--------------------------------------------------------------------
-        RenderCommand!.drawPrimitives( MTLPrimitiveType.TriangleStrip,
+        RenderCommand.drawPrimitives( MTLPrimitiveType.TriangleStrip,
                                         vertexStart:0,
                                         vertexCount:4 )
-        RenderCommand!.popDebugGroup()
-        RenderCommand!.endEncoding()
+        RenderCommand.popDebugGroup()
+        RenderCommand.endEncoding()
 
         commandBuffer.presentDrawable(currentDrawable()!)
 
